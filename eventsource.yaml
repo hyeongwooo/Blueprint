@@ -3,9 +3,15 @@ kind: EventSource
 metadata:
   name: {{ .User }}-eventsource
 spec:
+  service:
+    ports:
+      - port: {{ .Port }}
+        targetPort: {{ .Port }}
+        nodePort: 0
   webhook:
   {{- range .Event }}
     {{ .Name }}:
+      port: {{ $.Port }}
       endpoint: /{{ .Name }}
       method: POST
   {{- end }}
