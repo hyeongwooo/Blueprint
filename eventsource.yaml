@@ -4,8 +4,8 @@ metadata:
   name: {{ .User }}-eventsource
 spec:
   webhook:
-{{- range .Event }}
-    {{ .name }}:
-      endpoint: /{{ .name }}
+  {{- range .Event }}
+    {{ .Name }}:
+      endpoint: /{{ .Name }}
       method: POST
-{{- end }}
+  {{- end }}

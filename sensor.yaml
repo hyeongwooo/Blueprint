@@ -6,16 +6,16 @@ spec:
   template:
     serviceAccountName: operate-workflow-sa
   dependencies:
-  {{- range .EventLogic.Steps }}
+  {{- range .Event }}
     - name: {{ .Name }}
       eventSourceName: event-source-{{ .Name }}
-      eventName: {{ .Template }}
+      eventName: {{ .Name }}
   {{- end }}
   triggers:
-  {{- range $index, $condition := .EventLogic.Conditions }}
+  {{- range $index, $logic := .EventLogic }}
     - template:
-        name: trigger-workflow-{{$index}}
-        conditions: "{{ $condition }}"
+        name: trigger-workflow-{{ $index }}
+        conditions: "{{ $logic.Condition }}"
         argoWorkflow:
           operation: submit
           source:
@@ -23,9 +23,9 @@ spec:
               apiVersion: argoproj.io/v1alpha1
               kind: Workflow
               metadata:
-                generateName: custom-workflow-{{$index}}-
+                generateName: workflow-{{ $logic.Service }}-
               spec:
-                entrypoint: {{ $.Workflow.Entrypoint }}
+                entrypoint: main
                 workflowTemplateRef:
-                  name: {{ $.Workflow.WorkflowTemplate }}
+                  name: {{ $logic.Service }}-workflow-template
   {{- end }}

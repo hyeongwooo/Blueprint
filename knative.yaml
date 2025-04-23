@@ -2,12 +2,12 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: {{ .name }}
+  name: {{ .Name }}
   namespace: {{ $.User }}
 spec:
   template:
     spec:
       containers:
-        - image: {{ .image }}
+        - image: {{ .Image }}
 ---
 {{- end }}

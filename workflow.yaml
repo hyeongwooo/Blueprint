@@ -1,23 +1,23 @@
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  name: {{ .Workflow.WorkflowTemplate }}
+  name: {{ .User }}-workflow-template
   namespace: {{ .User }}
 spec:
   templates:
   - name: main
     steps:
-    {{- range .Workflow.Functions }}
+    {{- range .Service }}
     - - name: {{ .Name }}
         template: {{ .Name }}
     {{- end }}
 
-{{- range .Workflow.Functions }}
+  {{- range .Service }}
   - name: {{ .Name }}
     http:
-      url: {{ .URL }}
+      url: http://{{ .Name }}.{{ $.User }}.svc.cluster.local
       method: POST
       headers:
-        - name: Content-Type
-          value: application/json
-{{- end }}
+      - name: Content-Type
+        value: application/json
+  {{- end }}
