@@ -5,13 +5,13 @@ metadata:
 spec:
   service:
     ports:
-      - port: "{{ .Port }}"
-        targetPort: "{{ .Port }}"
+      - port: {{ .Port }}
+        targetPort: {{ .Port }}
         nodePort: 0
   webhook:
   {{- range .Event }}
     {{ .Name }}:
-      port: {{ $.Port }}
+      port: "{{ $.Port }}"
       endpoint: /{{ .Name }}
       method: POST
   {{- end }}
