@@ -5,8 +5,8 @@ metadata:
 spec:
   service:
     ports:
-      - port: {{ .Port }}
-        targetPort: {{ .Port }}
+      - port: "{{ .Port }}"
+        targetPort: "{{ .Port }}"
         nodePort: 0
   webhook:
   {{- range .Event }}
