@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: {{ .Workflow.WorkflowTemplate }}
+  namespace: {{ .User }}
+spec:
+  templates:
+  - name: main
+    steps:
+    {{- range .Workflow.Functions }}
+    - - name: {{ .Name }}
+        template: {{ .Name }}
+    {{- end }}
+
+{{- range .Workflow.Functions }}
+  - name: {{ .Name }}
+    http:
+      url: {{ .URL }}
+      method: POST
+      headers:
+        - name: Content-Type
+          value: application/json
+{{- end }}

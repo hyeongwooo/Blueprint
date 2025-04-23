@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: {{ .User }}-sensor
+spec:
+  template:
+    serviceAccountName: operate-workflow-sa
+  dependencies:
+  {{- range .EventLogic.Steps }}
+    - name: {{ .Name }}
+      eventSourceName: event-source-{{ .Name }}
+      eventName: {{ .Template }}
+  {{- end }}
+  triggers:
+  {{- range $index, $condition := .EventLogic.Conditions }}
+    - template:
+        name: trigger-workflow-{{$index}}
+        conditions: "{{ $condition }}"
+        argoWorkflow:
+          operation: submit
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: custom-workflow-{{$index}}-
+              spec:
+                entrypoint: {{ $.Workflow.Entrypoint }}
+                workflowTemplateRef:
+                  name: {{ $.Workflow.WorkflowTemplate }}
+  {{- end }}

@@ -1,0 +1,13 @@
+{{- range .Service }}
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.User }}
+spec:
+  template:
+    spec:
+      containers:
+        - image: {{ .image }}
+---
+{{- end }}
